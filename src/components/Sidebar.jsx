@@ -1,16 +1,5 @@
 import { Home, Flame, Crown, Heart } from 'lucide-react'
-// function Sidebar() {
-//   return (
-//     <aside className="w-64 bg-neutral-900 text-neutral-200 border-r border-neutral-800">
-//       <nav className="p-4 space-y-1">
-//         <SidebarItem label="Home" />
-//         <SidebarItem label="Trending" />
-//         <SidebarItem label="Ranking" />
-//         <SidebarItem label="Favorites" />
-//       </nav>
-//     </aside>
-//   )
-// }
+import { Link } from 'react-router-dom'
 
 function Sidebar() {
   return (
@@ -21,7 +10,10 @@ function Sidebar() {
       border-r border-neutral-800
     ">
       <nav className="p-4 space-y-1">
-        <SidebarItem icon={Home} label="Home"  />
+        <Link to="/">
+          <SidebarItem icon={Home} label="Home"  />
+        </Link>
+        
         <SidebarItem icon={Flame} label="Trending" />
         <SidebarItem icon={Crown} label="Ranking" />
         <SidebarItem icon={Heart} label="Favorites" />
@@ -30,18 +22,6 @@ function Sidebar() {
   )
 }
 
-// function SidebarItem({ label }) {
-//   return (
-//     <div className="
-//       px-3 py-2 rounded-lg
-//       cursor-pointer
-//       hover:bg-neutral-800
-//       transition
-//     ">
-//       {label}
-//     </div>
-//   )
-// }
 function SidebarItem({ icon: Icon, label, active }) {
   return (
     <div
