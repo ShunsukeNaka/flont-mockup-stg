@@ -4,6 +4,10 @@ import Sidebar from "./components/Sidebar"
 // import TopicRow from "./components/TopicRow"
 import Home from './pages/Home'
 import Account from './pages/Account'
+import Trend from './pages/Trend'
+import Ranking from './pages/Ranking'
+import Favorite from './pages/Favorite'
+import ShortsViewer from './pages/ShortsViewer'
 
 function App() {
   return (
@@ -27,6 +31,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/trend" element={<Trend />}/>
+            <Route path="/ranking" element={<Ranking />}/>
+            <Route path="/favorite" element={<Favorite />}/>
+            <Route path="/shorts/:id" element={<ShortsViewer />} />
           </Routes>
         </main>
       </div>

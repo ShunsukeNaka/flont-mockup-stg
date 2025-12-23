@@ -1,3 +1,5 @@
+// import { Play } from "lucide-react"
+
 // function VideoCard() {
 //   return (
 //     <div
@@ -31,6 +33,37 @@
 //         "
 //       />
 
+//       {/* 中央再生ボタン */}
+//       <div
+//         className="
+//           absolute
+//           inset-0
+//           flex
+//           items-center
+//           justify-center
+//           opacity-0
+//           transition
+//           duration-300
+//           group-hover:opacity-100
+//           pointer-events-none
+//         "
+//       >
+//         <div
+//           className="
+//             flex
+//             items-center
+//             justify-center
+//             w-14
+//             h-14
+//             rounded-full
+//             bg-neutral-900/70
+//             backdrop-blur-sm
+//           "
+//         >
+//           <Play className="w-7 h-7 text-white fill-white ml-0.5" />
+//         </div>
+//       </div>
+
 //       {/* 下部情報レイヤー */}
 //       <div
 //         className="
@@ -52,7 +85,7 @@
 //         "
 //       >
 //         <p className="text-xs text-neutral-300">
-//             ▷12.3万 回再生
+//           ▷12.3万 回再生
 //         </p>
 //         <p className="text-sm font-semibold leading-tight">
 //           サンプル動画タイトル
@@ -63,11 +96,16 @@
 // }
 
 // export default VideoCard
-import { Play } from "lucide-react"
 
-function VideoCard() {
+import { Play } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+
+function VideoCard({ id }) {
+  const navigate = useNavigate()
+
   return (
     <div
+      onClick={() => navigate(`/shorts/${id}`)}
       className="
         group
         relative
@@ -77,6 +115,7 @@ function VideoCard() {
         overflow-hidden
         bg-neutral-800
         shrink-0
+        cursor-pointer
         transition
         duration-300
         hover:-translate-y-1

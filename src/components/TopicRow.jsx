@@ -57,7 +57,7 @@ function TopicRow({ title, Icon }) {
             "
           >
             {Array.from({ length: 8 }).map((_, i) => (
-              <VideoCard key={i} />
+              <VideoCard key={i} id={i}/>
             ))}
           </div>
         </div>

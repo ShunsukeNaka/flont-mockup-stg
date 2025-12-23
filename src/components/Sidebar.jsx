@@ -13,10 +13,15 @@ function Sidebar() {
         <Link to="/">
           <SidebarItem icon={Home} label="Home"  />
         </Link>
-        
-        <SidebarItem icon={Flame} label="Trending" />
-        <SidebarItem icon={Crown} label="Ranking" />
-        <SidebarItem icon={Heart} label="Favorites" />
+        <Link to="/trend">
+          <SidebarItem icon={Flame} label="Trending" />
+        </Link>
+        <Link to="/ranking">
+          <SidebarItem icon={Crown} label="Ranking" />
+        </Link>
+        <Link to="/favorite">
+          <SidebarItem icon={Heart} label="Favorites" />
+        </Link>
       </nav>
     </aside>
   )
