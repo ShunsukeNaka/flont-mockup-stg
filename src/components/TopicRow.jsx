@@ -68,31 +68,88 @@
 
 // export default TopicRow
 
+//========================================================================
+// import VideoRow from "./VideoRow"
+
+// function TopicRow({ title, Icon, movies, count = 10 }) {
+//   return (
+//     <section className="relative">
+//       {/* アイコンレイヤー */}
+//       {Icon && (
+//         <div className="absolute -left-20 top-0 pointer-events-none">
+//           <Icon className="w-40 h-40 text-neutral-600/40 -rotate-45 blur-[1px]" />
+//         </div>
+//       )}
+
+//       <div className="relative overflow-hidden space-y-4">
+//         {/* タイトル */}
+//         <div className="relative z-10 flex items-center justify-between">
+//           <h2 className="text-lg font-semibold text-neutral-100">
+//             {title}
+//           </h2>
+
+//           <button className="text-sm text-neutral-400 hover:text-neutral-200 transition">
+//             and more →
+//           </button>
+//         </div>
+
+//         {/* 横スクロール */}
+//         <VideoRow movies={movies} count={count} />
+//       </div>
+//     </section>
+//   )
+// }
+
+// export default TopicRow
+//=======================================================================
+
 import VideoRow from "./VideoRow"
 
 function TopicRow({ title, Icon, movies, count = 10 }) {
   return (
-    <section className="relative">
-      {/* アイコンレイヤー */}
+    <section
+      className="
+        relative
+        w-full
+        overflow-x-hidden
+      "
+    >
+      {/* 背景アイコン（装飾） */}
       {Icon && (
-        <div className="absolute -left-20 top-0 pointer-events-none">
+        <div
+          className="
+            absolute
+            -left-20
+            top-0
+            pointer-events-none
+            hidden md:block
+          "
+        >
           <Icon className="w-40 h-40 text-neutral-600/40 -rotate-45 blur-[1px]" />
         </div>
       )}
 
-      <div className="relative overflow-hidden space-y-4">
-        {/* タイトル */}
-        <div className="relative z-10 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-neutral-100">
+      {/* コンテンツ本体 */}
+      <div
+        className="
+          relative
+          w-full
+          overflow-x-hidden
+          space-y-4
+        "
+      >
+        {/* タイトル行 */}
+        <div className="relative z-10 flex items-center justify-between px-1">
+          <h2 className="text-base md:text-lg font-semibold text-neutral-100">
             {title}
           </h2>
 
-          <button className="text-sm text-neutral-400 hover:text-neutral-200 transition">
+          <button className="text-xs md:text-sm text-neutral-400 hover:text-neutral-200 transition">
             and more →
           </button>
         </div>
 
-        {/* 横スクロール */}
+        {/* 横スクロール（中だけ許可） */}
         <VideoRow movies={movies} count={count} />
       </div>
     </section>
