@@ -76,14 +76,13 @@
 // }
 
 // export default ShortsViewer
-
 import { useParams } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 
 const VIDEOS = [
-  "/movies/recuruit-1.mp4",
-  "/movies/recuruit-2.mp4",
-  "/movies/recuruit-3.mp4",
+  "/videos/video1.mp4",
+  "/videos/video2.mp4",
+  "/videos/video3.mp4",
 ]
 
 function ShortsViewer() {
@@ -94,6 +93,7 @@ function ShortsViewer() {
   const [index, setIndex] = useState(
     Math.min(Math.max(Number(id) || 0, 0), VIDEOS.length - 1)
   )
+  const [muted, setMuted] = useState(true)
 
   /* bodyスクロール無効 */
   useEffect(() => {
@@ -108,12 +108,13 @@ function ShortsViewer() {
       if (!video) return
       if (i === index) {
         video.currentTime = 0
+        video.muted = muted
         video.play().catch(() => {})
       } else {
         video.pause()
       }
     })
-  }, [index])
+  }, [index, muted])
 
   /* ホイール操作（PC） */
   useEffect(() => {
@@ -121,17 +122,16 @@ function ShortsViewer() {
     if (!el) return
 
     let locked = false
-
     const onWheel = (e) => {
       e.preventDefault()
       if (locked) return
       locked = true
 
-      if (e.deltaY > 0) {
-        setIndex((i) => Math.min(i + 1, VIDEOS.length - 1))
-      } else {
-        setIndex((i) => Math.max(i - 1, 0))
-      }
+      setIndex((i) =>
+        e.deltaY > 0
+          ? Math.min(i + 1, VIDEOS.length - 1)
+          : Math.max(i - 1, 0)
+      )
 
       setTimeout(() => (locked = false), 350)
     }
@@ -155,17 +155,15 @@ function ShortsViewer() {
 
     const onTouchEnd = (e) => {
       if (locked) return
-      const endY = e.changedTouches[0].clientY
-      const diff = startY - endY
+      const diff = startY - e.changedTouches[0].clientY
       if (Math.abs(diff) < THRESHOLD) return
 
       locked = true
-
-      if (diff > 0) {
-        setIndex((i) => Math.min(i + 1, VIDEOS.length - 1))
-      } else {
-        setIndex((i) => Math.max(i - 1, 0))
-      }
+      setIndex((i) =>
+        diff > 0
+          ? Math.min(i + 1, VIDEOS.length - 1)
+          : Math.max(i - 1, 0)
+      )
 
       setTimeout(() => (locked = false), 350)
     }
@@ -179,20 +177,22 @@ function ShortsViewer() {
     }
   }, [])
 
+  /* 🔊 タップで音ON/OFF */
+  const toggleSound = () => {
+    setMuted((m) => !m)
+  }
+
   return (
     <div
       ref={containerRef}
+      onClick={toggleSound}
       className="
-        h-screen w-screen
-        bg-black
+        h-screen w-screen bg-black
         flex items-center justify-center
-        overflow-hidden
-        overscroll-none
-        touch-none
+        overflow-hidden overscroll-none
       "
     >
-      {/* 縦動画フレーム */}
-      <div className="aspect-[9/16] h-[90%] max-w-[540px] overflow-hidden">
+      <div className="aspect-[9/16] h-[90%] max-w-[540px] overflow-hidden relative">
         <div
           className="h-full transition-transform duration-300 ease-out"
           style={{ transform: `translateY(-${index * 100}%)` }}
@@ -203,13 +203,18 @@ function ShortsViewer() {
                 ref={(el) => (videoRefs.current[i] = el)}
                 src={src}
                 className="h-full w-full object-cover"
-                muted
                 playsInline
                 loop
+                muted={muted}
                 preload="metadata"
               />
             </div>
           ))}
+        </div>
+
+        {/* 音アイコン */}
+        <div className="absolute bottom-6 right-4 text-white text-sm bg-black/50 px-3 py-1 rounded-full">
+          {muted ? "🔇 タップで音ON" : "🔊 音あり"}
         </div>
       </div>
     </div>
