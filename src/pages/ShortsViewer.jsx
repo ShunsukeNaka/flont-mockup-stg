@@ -250,10 +250,6 @@ function ShortsViewer() {
   const [muted, setMuted] = useState(true)
   const [liked, setLiked] = useState(false)
 
-  // スワイプ演出用
-  const [dragX, setDragX] = useState(0)
-  const [dragging, setDragging] = useState(false)
-
   /* bodyスクロール無効 */
   useEffect(() => {
     const original = document.body.style.overflow
@@ -264,7 +260,6 @@ function ShortsViewer() {
   /* 動画制御 */
   useEffect(() => {
     setLiked(false)
-    setDragX(0)
     videoRefs.current.forEach((video, i) => {
       if (!video) return
       if (i === index) {
@@ -277,7 +272,7 @@ function ShortsViewer() {
     })
   }, [index, muted])
 
-  /* タッチ操作（縦＋横＋ドラッグ） */
+  /* タッチ操作（縦：切替 / 右：お気に入り） */
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -285,60 +280,46 @@ function ShortsViewer() {
     let startX = 0
     let startY = 0
     let locked = false
-    const SWIPE_THRESHOLD = 80
+    const THRESHOLD = 70
 
     const onTouchStart = (e) => {
       startX = e.touches[0].clientX
       startY = e.touches[0].clientY
-      setDragging(true)
-    }
-
-    const onTouchMove = (e) => {
-      if (!dragging) return
-      const dx = e.touches[0].clientX - startX
-      const dy = startY - e.touches[0].clientY
-
-      // 横ドラッグ中だけ引っ張る
-      if (Math.abs(dx) > Math.abs(dy) && dx > 0) {
-        setDragX(Math.min(dx, 120))
-      }
     }
 
     const onTouchEnd = (e) => {
-      setDragging(false)
+      if (locked) return
 
       const dx = e.changedTouches[0].clientX - startX
       const dy = startY - e.changedTouches[0].clientY
 
-      // お気に入り確定
-      if (dx > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+      /* 右スワイプ：お気に入り */
+      if (dx > THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
         setLiked(true)
-      }
-      // 縦スワイプ
-      else if (Math.abs(dy) > SWIPE_THRESHOLD && !locked) {
-        locked = true
-        setIndex((i) =>
-          dy > 0
-            ? Math.min(i + 1, VIDEOS.length - 1)
-            : Math.max(i - 1, 0)
-        )
-        setTimeout(() => (locked = false), 350)
+        return
       }
 
-      // 元の位置へ戻す
-      setDragX(0)
+      /* 縦スワイプ：動画切替 */
+      if (Math.abs(dy) < THRESHOLD) return
+
+      locked = true
+      setIndex((i) =>
+        dy > 0
+          ? Math.min(i + 1, VIDEOS.length - 1)
+          : Math.max(i - 1, 0)
+      )
+
+      setTimeout(() => (locked = false), 350)
     }
 
     el.addEventListener("touchstart", onTouchStart, { passive: true })
-    el.addEventListener("touchmove", onTouchMove, { passive: true })
     el.addEventListener("touchend", onTouchEnd)
 
     return () => {
       el.removeEventListener("touchstart", onTouchStart)
-      el.removeEventListener("touchmove", onTouchMove)
       el.removeEventListener("touchend", onTouchEnd)
     }
-  }, [dragging])
+  }, [])
 
   const toggleSound = () => setMuted((m) => !m)
 
@@ -355,15 +336,12 @@ function ShortsViewer() {
       {/* 表示枠 */}
       <div className="aspect-[9/16] h-[90%] max-w-[540px] relative overflow-hidden">
 
-        {/* 動画スライダー */}
+        {/* 動画スライダー（縦のみ） */}
         <div
           className="transition-transform duration-300 ease-out"
           style={{
             height: `${VIDEOS.length * 100}%`,
-            transform: `
-              translateY(-${index * (100 / VIDEOS.length)}%)
-              translateX(${dragX}px)
-            `,
+            transform: `translateY(-${index * (100 / VIDEOS.length)}%)`,
           }}
         >
           {VIDEOS.map((src, i) => (
@@ -378,7 +356,7 @@ function ShortsViewer() {
                 preload="metadata"
               />
 
-              {/* お気に入り済みマーク */}
+              {/* お気に入り登録済みマーク */}
               {liked && i === index && (
                 <div className="absolute top-4 right-4 bg-black/60 p-2 rounded-full">
                   <Bookmark className="w-6 h-6 text-yellow-400" />
