@@ -76,6 +76,7 @@
 // }
 
 // export default ShortsViewer
+
 import { useParams } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 
@@ -102,7 +103,7 @@ function ShortsViewer() {
     return () => (document.body.style.overflow = original)
   }, [])
 
-  /* 表示中の動画のみ再生 */
+  /* 表示中の動画だけ再生 */
   useEffect(() => {
     videoRefs.current.forEach((video, i) => {
       if (!video) return
@@ -116,7 +117,7 @@ function ShortsViewer() {
     })
   }, [index, muted])
 
-  /* ホイール操作（PC） */
+  /* ホイール（PC） */
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -140,7 +141,7 @@ function ShortsViewer() {
     return () => el.removeEventListener("wheel", onWheel)
   }, [])
 
-  /* タッチ操作（スマホ） */
+  /* タッチ（スマホ） */
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -177,10 +178,7 @@ function ShortsViewer() {
     }
   }, [])
 
-  /* 🔊 タップで音ON/OFF */
-  const toggleSound = () => {
-    setMuted((m) => !m)
-  }
+  const toggleSound = () => setMuted((m) => !m)
 
   return (
     <div
@@ -192,13 +190,21 @@ function ShortsViewer() {
         overflow-hidden overscroll-none
       "
     >
+      {/* 表示枠 */}
       <div className="aspect-[9/16] h-[90%] max-w-[540px] overflow-hidden relative">
+        {/* ★ 高さを動画本数分確保 */}
         <div
-          className="h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateY(-${index * 100}%)` }}
+          className="transition-transform duration-300 ease-out"
+          style={{
+            height: `${VIDEOS.length * 100}%`,
+            transform: `translateY(-${index * (100 / VIDEOS.length)}%)`,
+          }}
         >
           {VIDEOS.map((src, i) => (
-            <div key={i} className="h-full w-full">
+            <div
+              key={i}
+              className="h-[calc(100%/3)] w-full"
+            >
               <video
                 ref={(el) => (videoRefs.current[i] = el)}
                 src={src}
@@ -212,7 +218,7 @@ function ShortsViewer() {
           ))}
         </div>
 
-        {/* 音アイコン */}
+        {/* 音状態表示 */}
         <div className="absolute bottom-6 right-4 text-white text-sm bg-black/50 px-3 py-1 rounded-full">
           {muted ? "🔇 タップで音ON" : "🔊 音あり"}
         </div>
