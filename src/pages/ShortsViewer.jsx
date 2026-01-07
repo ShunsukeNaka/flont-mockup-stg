@@ -80,9 +80,9 @@ import { useParams } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 
 const VIDEOS = [
-  "/videos/video1.mp4",
-  "/videos/video2.mp4",
-  "/videos/video3.mp4",
+  "/movies/recruit-1.mp4",
+  "/movies/recruit-2.mp4",
+  "/movies/recruit-3.mp4",
 ]
 
 function ShortsViewer() {
