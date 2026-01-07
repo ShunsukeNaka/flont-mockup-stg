@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route ,useLocation} from 'react-router-dom'
 import Header from "./components/Header"
 import Sidebar from "./components/Sidebar"
 // import TopicRow from "./components/TopicRow"
@@ -10,6 +10,14 @@ import Favorite from './pages/Favorite'
 import ShortsViewer from './pages/ShortsViewer'
 
 function App() {
+  // const location = useLocation();
+
+  // const isShorts = location.pathname.startsWith('/shorts');
+  // if (isShorts){
+  //   return(
+
+  //   )
+  // }
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       {/* Header */}

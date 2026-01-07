@@ -1,8 +1,12 @@
 // import { Play } from "lucide-react"
+// import { useNavigate } from "react-router-dom"
 
-// function VideoCard() {
+// function VideoCard({ id }) {
+//   const navigate = useNavigate()
+
 //   return (
 //     <div
+//       onClick={() => navigate(`/shorts/${id}`)}
 //       className="
 //         group
 //         relative
@@ -12,6 +16,7 @@
 //         overflow-hidden
 //         bg-neutral-800
 //         shrink-0
+//         cursor-pointer
 //         transition
 //         duration-300
 //         hover:-translate-y-1
@@ -19,10 +24,13 @@
 //         hover:shadow-black/40
 //       "
 //     >
-//       {/* サムネイル */}
-//       <img
-//         src="https://placehold.co/320x480"
-//         alt=""
+//       {/* 動画サムネイル */}
+//       <video
+//         src={`/movies/recuruit-${id}.mp4`}
+//         muted
+//         loop
+//         playsInline
+//         preload="metadata"
 //         className="
 //           h-full
 //           w-full
@@ -95,17 +103,31 @@
 //   )
 // }
 
-// export default VideoCard
+// export default VideoCard;
 
 import { Play } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useRef } from "react"
 
-function VideoCard({ id }) {
+function VideoCard({ id, videoSrc }) {
   const navigate = useNavigate()
+  const videoRef = useRef(null)
+
+  const handleMouseEnter = () => {
+    videoRef.current?.play()
+  }
+
+  const handleMouseLeave = () => {
+    if (!videoRef.current) return
+    videoRef.current.pause()
+    videoRef.current.currentTime = 0
+  }
 
   return (
     <div
       onClick={() => navigate(`/shorts/${id}`)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className="
         group
         relative
@@ -123,10 +145,13 @@ function VideoCard({ id }) {
         hover:shadow-black/40
       "
     >
-      {/* サムネイル */}
-      <img
-        src="https://placehold.co/320x480"
-        alt=""
+      {/* 動画 */}
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        muted
+        playsInline
+        preload="metadata"
         className="
           h-full
           w-full
@@ -137,7 +162,7 @@ function VideoCard({ id }) {
         "
       />
 
-      {/* 中央再生ボタン */}
+      {/* 再生ボタン */}
       <div
         className="
           absolute
